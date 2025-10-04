@@ -1,5 +1,3 @@
----
-
 
 # 📨 Spam Message Detection App
 
@@ -118,4 +116,5 @@ Contributions are welcome!
 ## 🎉 Made with ❤️ by Ramtanay
 
 ---
+
 
