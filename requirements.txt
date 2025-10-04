@@ -1,10 +1,4 @@
-<<<<<<< HEAD
 streamlit
 pickle
 nltk
-=======
-streamlit
-pickle
-nltk
->>>>>>> ba1bd291f584c47f53a2c36e5814adbd6a5ffb00
 string
