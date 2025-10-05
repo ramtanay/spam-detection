@@ -6,16 +6,15 @@ import string
 from nltk.stem.porter import PorterStemmer
 
 # --- Initialization and Model Loading ---
-# Note: You should ensure these NLTK downloads happen before running the app 
-# for the first time, or uncomment them if you are running in a fresh environment.
-# try:
-#     nltk.data.find('corpora/stopwords')
-# except nltk.downloader.DownloadError:
-#     nltk.download('stopwords')
-# try:
-#     nltk.data.find('tokenizers/punkt')
-# except nltk.downloader.DownloadError:
-#     nltk.download('punkt')
+# Note: You should ensure these NLTK downloads happen before running the app
+try:
+    nltk.data.find('corpora/stopwords')
+except nltk.downloader.DownloadError:
+    nltk.download('stopwords')
+try:
+    nltk.data.find('tokenizers/punkt')
+except nltk.downloader.DownloadError:
+    nltk.download('punkt')
 
 # Initialize Stemmer
 ps = PorterStemmer()
