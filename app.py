@@ -6,15 +6,22 @@ import string
 from nltk.stem.porter import PorterStemmer
 
 # --- Initialization and Model Loading ---
-# Note: You should ensure these NLTK downloads happen before running the app
+# Ensure NLTK resources are available
 try:
     nltk.data.find('corpora/stopwords')
-except nltk.downloader.DownloadError:
+except LookupError:
     nltk.download('stopwords')
+
 try:
     nltk.data.find('tokenizers/punkt')
-except nltk.downloader.DownloadError:
+except LookupError:
     nltk.download('punkt')
+
+# For newer NLTK versions (≥3.8), include this too
+try:
+    nltk.data.find('tokenizers/punkt_tab')
+except LookupError:
+    nltk.download('punkt_tab')
 
 # Initialize Stemmer
 ps = PorterStemmer()
@@ -24,9 +31,8 @@ try:
     tfidf = pickle.load(open('vectorizer.pkl', 'rb'))
     model = pickle.load(open('model.pkl', 'rb'))
 except FileNotFoundError:
-    st.error("Error: Model files ('vectorizer.pkl' or 'model.pkl') not found.")
+    st.error("❌ Model files ('vectorizer.pkl' or 'model.pkl') not found.")
     st.stop()
-
 
 # --- Text Preprocessing Function ---
 def transform_text(text):
@@ -53,43 +59,40 @@ def transform_text(text):
         
     return " ".join(y)
 
-
 # --- Streamlit Web App Layout ---
+st.set_page_config(page_title="SMS Spam Detector", page_icon="✉️", layout="centered")
 
-# Set a better title with an emoji
+# Title and description
 st.title("✉️ SMS Spam Detector")
-
-# Add a subtle subheader/description
 st.caption("A Machine Learning powered tool to classify messages as Spam or Not Spam (Ham).")
-st.markdown("---") # Visual separator
+st.markdown("---")
 
-# Add a sidebar for 'About' and instructions
+# Sidebar: About and Instructions
 with st.sidebar:
-    st.header("About this App")
+    st.header("ℹ️ About this App")
     st.info(
-        "This application is a simple demonstrator using a pre-trained **Naive Bayes** model "
-        "and a **TF-IDF vectorizer** for natural language processing."
+        "This demo uses a pre-trained **Naive Bayes** model and a **TF-IDF vectorizer** "
+        "to classify SMS messages as Spam or Ham."
     )
     st.markdown("---")
-    st.markdown("**How to Use:**")
-    st.markdown("1. Enter a full message in the text box.")
-    st.markdown("2. Click the 'Analyze Message' button.")
-    st.markdown("3. Get the prediction instantly.")
+    st.markdown("**📋 How to Use:**")
+    st.markdown("1. Enter a message below.")
+    st.markdown("2. Click **Analyze Message**.")
+    st.markdown("3. View the prediction instantly!")
 
-
-# Text Area for Input
+# Input Text Area
 input_sms = st.text_area(
-    "Enter the SMS/Email message here:", 
-    height=150, 
+    "✉️ Enter the SMS or Email message below:",
+    height=150,
     placeholder="Type or paste a suspicious message to check for spam..."
 )
 
-# Button for Prediction
-if st.button("Analyze Message", use_container_width=True):
+# Analyze Button
+if st.button("🔍 Analyze Message", use_container_width=True):
     if not input_sms.strip():
-        st.warning("Please enter a message to analyze.")
+        st.warning("⚠️ Please enter a message to analyze.")
     else:
-        # 1. Preprocess
+        # 1. Preprocess the message
         transformed_sms = transform_text(input_sms)
         
         # 2. Vectorize
@@ -98,13 +101,15 @@ if st.button("Analyze Message", use_container_width=True):
         # 3. Predict
         result = model.predict(vector_input)[0]
         
-        # 4. Display Result with improved icons and formatting
-        st.markdown("### Prediction Result:")
+        # 4. Display result
+        st.markdown("### 🧾 Prediction Result:")
         if result == 1:
-            st.error("🚨 SPAM DETECTED!")
-            st.write("This message is highly likely to be a **Spam** message.")
+            st.error("🚨 **SPAM DETECTED!**")
+            st.write("This message is highly likely to be **Spam**.")
         else:
-            st.success("✅ SAFE (Not Spam/Ham)")
-            st.write("This message is likely **Not Spam** (Ham).")
-
+            st.success("✅ **SAFE (Not Spam / Ham)**")
+            st.write("This message appears to be **legitimate (Ham)**.")
+            
 st.markdown("---")
+st.caption("Developed by Ramtanay with ❤️")
+
