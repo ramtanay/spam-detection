@@ -112,4 +112,3 @@ if st.button("🔍 Analyze Message", use_container_width=True):
             
 st.markdown("---")
 st.caption("Developed by Ramtanay with ❤️")
-
